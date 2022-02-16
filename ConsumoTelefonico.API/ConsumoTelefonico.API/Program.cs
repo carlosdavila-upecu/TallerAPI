@@ -1,5 +1,7 @@
 using Data.Contexto;
 using Microsoft.EntityFrameworkCore;
+using Negocio.Repositorio;
+using Negocio.Repositorio.IRepositorio;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(opciones =>
 
 //AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+//Repositorios
+builder.Services.AddScoped<IRegistroRepositorio, RegistroRepositorio>();
 
 var app = builder.Build();
 

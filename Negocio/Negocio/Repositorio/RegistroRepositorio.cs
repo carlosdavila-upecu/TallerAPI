@@ -29,7 +29,7 @@ namespace Negocio.Repositorio
             return _mapper.Map<IEnumerable<RegistroLlamadaDTO>>(_contexto.RegistroLlamadas);
         }
 
-        public async Task<IEnumerable<RegistroLlamadaDTO>> VerRegistroLlamadasUsuario(string idUsuario)
+        public async Task<IEnumerable<RegistroLlamadaDTO>> VerRegistroLlamadas(string idUsuario)
         {
             var listaLlamadas = _contexto.RegistroLlamadas.Where(llamada => llamada.UserId == idUsuario);
             return _mapper.Map<IEnumerable<RegistroLlamadaDTO>>(listaLlamadas);

@@ -6,6 +6,6 @@ namespace Negocio.Repositorio.IRepositorio
     {
         Task<RegistroLlamadaDTO> RegistrarLlamada(RegistroLlamadaDTO llamadaDTO);
         Task<IEnumerable<RegistroLlamadaDTO>> VerRegistroLlamadas();
-        Task<IEnumerable<RegistroLlamadaDTO>> VerRegistroLlamadasUsuario(string idUsuario);
+        Task<IEnumerable<RegistroLlamadaDTO>> VerRegistroLlamadas(string idUsuario);
     }
 }
