@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Modelos;
 using Negocio.Repositorio.IRepositorio;
 
@@ -15,6 +16,7 @@ namespace ConsumoTelefonico.API.Controllers
             _registroRepositorio = registroRepositorio;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Crear(RegistroLlamadaDTO llamadaDTO)
         {
@@ -22,12 +24,14 @@ namespace ConsumoTelefonico.API.Controllers
             return Ok(resultado);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> ObtenerLlamadas()
         {
             return Ok(await _registroRepositorio.VerRegistroLlamadas());
         }
 
+        [Authorize]
         [HttpGet("{idUsuario}")]
         public async Task<IActionResult> ObtenerLlamadas(string idUsuario)
         {

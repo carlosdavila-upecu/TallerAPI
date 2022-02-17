@@ -3,8 +3,8 @@
     public class UsuarioDTO
     {
         public virtual string Id { get; set; }
-        public int Nombre { get; set; }
-        public int PhoneNumber { get; set; }
+        public string Nombre { get; set; }
+        public string Telefono { get; set; }
         public decimal Tarifa { get; set; }
     }
 }
