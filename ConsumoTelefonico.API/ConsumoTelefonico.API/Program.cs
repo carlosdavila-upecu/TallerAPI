@@ -1,6 +1,7 @@
 using ConsumoTelefonico.API;
 using Data;
 using Data.Contexto;
+using Data.InicializarDB;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -78,6 +79,10 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //Repositorios
 builder.Services.AddScoped<IRegistroRepositorio, RegistroRepositorio>();
+builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+
+//Inicializador DB
+builder.Services.AddScoped<IInicializadorDB, InicializadorDB>();
 
 var app = builder.Build();
 
@@ -87,6 +92,9 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+//Inicializar DB
+InicializarDB();
+
 //Seguridad
 app.UseAuthentication();
 app.UseAuthorization();
@@ -94,3 +102,14 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+
+void InicializarDB()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var inicializador = scope.ServiceProvider.GetRequiredService<IInicializadorDB>();
+        inicializador.InicializarDB();
+    }
+}

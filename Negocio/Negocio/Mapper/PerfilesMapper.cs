@@ -9,6 +9,7 @@ namespace Negocio.Mapper
         public PerfilesMapper()
         {
             CreateMap<RegistroLlamada, RegistroLlamadaDTO>().ReverseMap();
+            CreateMap<Usuario, UsuarioDTO>().ReverseMap();
         }
     }
 }

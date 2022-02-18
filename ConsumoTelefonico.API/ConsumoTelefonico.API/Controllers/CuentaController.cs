@@ -1,9 +1,12 @@
-﻿using Data;
+﻿using Common;
+using Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Modelos;
+using Negocio.Repositorio.IRepositorio;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -18,16 +21,19 @@ namespace ConsumoTelefonico.API.Controllers
         private readonly UserManager<Usuario> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ConfiguracionJwt _configuracionJwt;
+        private readonly IUsuarioRepositorio _usuarioRepositorio;
 
         public CuentaController(
             UserManager<Usuario> userManager,
             SignInManager<Usuario> signInManager,
             RoleManager<IdentityRole> roleManager,
-            IOptions<ConfiguracionJwt> opciones)
+            IOptions<ConfiguracionJwt> opciones,
+            IUsuarioRepositorio usuarioRepositorio)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _usuarioRepositorio = usuarioRepositorio;
             _configuracionJwt = opciones.Value;
         }
 
@@ -106,7 +112,26 @@ namespace ConsumoTelefonico.API.Controllers
                 AutenticacionSatisfecha = false,
                 MensajeError = "Error de autenticacion"
             });
+        }
 
+        [Authorize(Roles = Roles.Administrador)]
+        [HttpPut("{idUsuario}")]
+        public async Task<IActionResult> ConvertirAdministrador(string idUsuario)
+        {
+            var usuario = await _userManager.FindByIdAsync(idUsuario);
+            if (usuario == null)
+                return BadRequest();
+
+            _userManager.AddToRoleAsync(usuario, Roles.Administrador).GetAwaiter().GetResult();
+
+            return Ok();
+        }
+
+        [Authorize(Roles = Roles.Administrador)]
+        [HttpGet]
+        public async Task<IActionResult> ObtenerUsuarios()
+        {
+            return Ok(await _usuarioRepositorio.ObtenerUsuarios());
         }
 
         private SigningCredentials ObtenerCredencialesInicioSesion()
