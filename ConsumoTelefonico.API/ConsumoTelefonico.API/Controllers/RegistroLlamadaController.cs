@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos;
 using Negocio.Repositorio.IRepositorio;
@@ -20,6 +21,7 @@ namespace ConsumoTelefonico.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear(RegistroLlamadaDTO llamadaDTO)
         {
+            llamadaDTO.FechaLlamada = DateTime.Now;
             var resultado = await _registroRepositorio.RegistrarLlamada(llamadaDTO);
             return Ok(resultado);
         }
@@ -36,6 +38,13 @@ namespace ConsumoTelefonico.API.Controllers
         public async Task<IActionResult> ObtenerLlamadas(string idUsuario)
         {
             return Ok(await _registroRepositorio.VerRegistroLlamadas(idUsuario));
+        }
+
+        [Authorize(Roles = Roles.Administrador)]
+        [HttpGet("[action]")]
+        public async Task<IActionResult> ObtenerConsumoLlamadas()
+        {
+            return Ok(await _registroRepositorio.VerConsumoPorUsuario());
         }
     }
 }

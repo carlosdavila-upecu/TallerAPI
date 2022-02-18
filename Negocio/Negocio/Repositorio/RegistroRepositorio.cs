@@ -34,5 +34,23 @@ namespace Negocio.Repositorio
             var listaLlamadas = _contexto.RegistroLlamadas.Where(llamada => llamada.UserId == idUsuario);
             return _mapper.Map<IEnumerable<RegistroLlamadaDTO>>(listaLlamadas);
         }
+
+        public async Task<IEnumerable<ConsumoPorUsuarioDTO>> VerConsumoPorUsuario()
+        {
+            return _contexto.RegistroLlamadas
+                        .GroupBy(registro => new
+                        {
+                            registro.UserId,
+                            registro.Usuario.Nombre,
+                            registro.Usuario.Tarifa
+                        })
+                        .Select(grupo => new ConsumoPorUsuarioDTO
+                        {
+                            idUsuario = grupo.Key.UserId,
+                            Nombre = grupo.Key.Nombre,
+                            CantidadLlamadas = grupo.Count(),
+                            TotalAPagar = grupo.Sum(registro => registro.Minutos * grupo.Key.Tarifa)
+                        });
+        }
     }
 }
